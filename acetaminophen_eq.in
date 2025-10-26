@@ -1,0 +1,129 @@
+# --------------------------------------------------------------------
+# LAMMPS Input Script – Acetaminophen (Paracetamol) 10x10x10 Crystal
+# Goal: Relax and equilibrate the crystal at 300 K and 1 atm
+# Audience: A complete beginner to molecular simulations
+# --------------------------------------------------------------------
+
+# --------------------------------------------------------------------
+# SECTION 1 — BASIC SIMULATION SETTINGS
+# --------------------------------------------------------------------
+
+units           real                # Use real-world units (Kelvin, kcal/mol, Ångström, fs)
+atom_style      full                # Each atom stores: charge, atom type, bonds, angles, etc.
+boundary        p p p               # Periodic boundary conditions in all directions (infinite crystal)
+special_bonds   charmm              # Follow CHARMM rules for scaling bonded/nonbonded interactions
+
+# --------------------------------------------------------------------
+# SECTION 2 — FORCE FIELD (ENERGY MODEL)
+# --------------------------------------------------------------------
+
+pair_style      lj/charmm/coul/long 10.0 12.0  # CHARMM-style Lennard-Jones + Coulomb; short-range cutoff 10–12 Å
+pair_modify     mix arithmetic      # Combine parameters for unlike atoms by simple average (arithmetic mixing)
+bond_style      harmonic              # Use CHARMM formula for bond energy (harmonic)
+angle_style     charmm              # Use CHARMM formula for angle bending
+dihedral_style  charmm              # Use CHARMM torsion energy formula
+improper_style  harmonic            # Use harmonic potential for out-of-plane bending
+
+# --------------------------------------------------------------------
+# SECTION 3 — INPUT STRUCTURE AND PARAMETERS
+# --------------------------------------------------------------------
+
+read_data       acetaminophen_10x10x10.data  # Load atom positions, bonds, charges, and box info
+include         acetaminophen.params      # Load force-field constants (bond, angle, dihedral, etc.) extracted earlier
+
+# Define KSpace AFTER the box is known (data file is triclinic)
+kspace_style    pppm 1.0e-5
+
+# --------------------------------------------------------------------
+# SECTION 4 — NEIGHBOR LIST (WHICH ATOMS "SEE" EACH OTHER)
+# --------------------------------------------------------------------
+
+neighbor        2.0 bin             # Build neighbor lists within 2 Å bins (for efficiency)
+neigh_modify    every 1 delay 0 check yes  # Update the neighbor list every step if atoms move
+
+# --------------------------------------------------------------------
+# SECTION 5 — MONITORING AND OUTPUT
+# --------------------------------------------------------------------
+
+thermo          500                 # Print thermodynamic data every 500 steps
+thermo_style    custom step temp press pe etotal vol density lx ly lz xz
+# Above line defines what to print: step number, temperature, pressure,
+# potential energy, total energy, volume, density, box lengths, tilt.
+thermo_modify   flush yes           # Immediately write thermo output to screen/file
+
+# --- Define equal-style variables for each thermo quantity ---
+variable step equal step
+variable temp equal temp
+variable press equal press
+variable pe equal pe
+variable etotal equal etotal
+variable vol equal vol
+variable density equal density
+variable lx equal lx
+variable ly equal ly
+variable lz equal lz
+variable xz equal xz
+
+# --- Write a machine-readable CSV of thermo data ---
+fix fthermo all print 500 "${step},${temp},${press},${pe},${etotal},${vol},${density},${lx},${ly},${lz},${xz}" &
+file acetaminophen_10x10x10_thermo.csv screen no title "step,temp,press,pe,etotal,vol,density,lx,ly,lz,xz"
+
+# --------------------------------------------------------------------
+# SECTION 6 — CLEAN UP ANY NET MOTION
+# --------------------------------------------------------------------
+
+fix             mom all momentum 100 linear 1 1 1 angular
+# Every 100 steps, remove any drifting linear/angular motion of the whole system.
+
+# --------------------------------------------------------------------
+# SECTION 7 — TRAJECTORY OUTPUT (FOR VIEWING MOLECULAR MOTION)
+# --------------------------------------------------------------------
+
+dump            1 all atom 500 acetaminophen_10x10x10.lammpstrj
+# Every 500 steps, write all atom coordinates into a trajectory file (.lammpstrj)
+dump_modify     1 sort id          # Keep atoms ordered by ID for readability
+
+# --------------------------------------------------------------------
+# SECTION 8 — ENERGY MINIMIZATION (REMOVE BAD CONTACTS)
+# --------------------------------------------------------------------
+
+reset_timestep  0                   # Start time counter from zero
+min_style       cg                  # Use the Conjugate Gradient algorithm for energy minimization
+minimize        1.0e-6 1.0e-8 5000 50000
+# Stop when energy or forces are small enough (tolerances 10⁻⁶–10⁻⁸)
+# or after a maximum of 50,000 iterations.
+
+# --------------------------------------------------------------------
+# SECTION 9 — NVT EQUILIBRATION (HEAT TO 300 K, CONSTANT VOLUME)
+# --------------------------------------------------------------------
+
+timestep        1.0                 # 1 fs
+velocity        all create 300.0 123456 mom yes rot yes dist gaussian
+
+fix             nvt all nvt temp 300.0 300.0 100.0
+run             20000               # 20 ps
+unfix           nvt
+
+# --------------------------------------------------------------------
+# SECTION 10 — NPT EQUILIBRATION (RELAX PRESSURE TO 1 atm)
+# --------------------------------------------------------------------
+
+fix             npt all npt temp 300.0 300.0 100.0 tri 1.0 1.0 1000.0
+run             80000               # 80 ps
+
+# --------------------------------------------------------------------
+# SECTION 11 — SAVE RESULTS (force PPPM to reinitialize for triclinic box)
+# --------------------------------------------------------------------
+
+kspace_style    none                # Clear previous PPPM setup (orthogonal vs triclinic mismatch)
+kspace_style    pppm 1.0e-5         # Recreate PPPM for the final (possibly tilted) cell
+run             0                   # Optional: trigger clean re-initialization
+
+write_data      acetaminophen_10x10x10_eq.data
+write_restart   acetaminophen_10x10x10_eq.restart
+
+print "All done!"
+
+# --------------------------------------------------------------------
+# END OF INPUT SCRIPT
+# --------------------------------------------------------------------

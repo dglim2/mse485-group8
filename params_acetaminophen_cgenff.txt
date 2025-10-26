@@ -1,0 +1,72 @@
+# Extracted parameter lines matching acetaminophen types
+# PRM: par_all36_cgenff.prm
+# STR: acetaminophen_single_cgenff_ready.str
+# .str file used: acetaminophen_single_cgenff_ready.str
+# atom types: 9
+# bond type pairs: 10
+# angle type triplets: 13
+# dihedral type quadruplets: 19
+# improper type quadruplets: 1
+
+===== NONBONDED =====
+CG2O1    0.0       -0.1100     2.00 ! NMA pure solvent, adm jr., 3/3/93
+CG2R61   0.0       -0.0700     1.9924 ! INDO/TRP
+CG331    0.0       -0.0780     2.0500   0.0 -0.01 1.9 ! alkane (CT3), 4/98, yin, adm jr; Rmin/2 modified from 2.04 to 2.05
+HGA3     0.0       -0.0240     1.3400 ! alkane, yin and mackerell, 4/98
+HGP1     0.0       -0.0460     0.2245 ! polar H
+HGR61    0.0       -0.0300     1.3582 ! benzene
+NG2S1    0.0       -0.2000     1.8500   0.0  -0.20 1.55 ! 1,4 vdW allows the C5 dipeptide minimum to exist
+OG2D1    0.0       -0.1200     1.7000   0.0 -0.12 1.40 ! carbonyl. Also consistent with adm, acetaldehyde, 11/08
+OG311    0.0       -0.1921     1.7650 ! og MeOH and EtOH 1/06 (was -0.1521 1.7682)
+
+===== BONDS =====
+CG2O1  CG331   250.00     1.4900 ! PROT Ala Dipeptide (5/91)
+CG2O1  NG2S1   370.00     1.3450 ! PROT Alanine Dipeptide ab initio calc's (LK)
+CG2O1  OG2D1   620.00     1.2300 ! PROT Peptide geometry, condensed phase (LK)
+CG2R61 CG2R61  305.00     1.3750 ! PROT benzene, JES 8/25/89
+CG2R61 HGR61   340.00     1.0800 ! PROT phe,tyr JES 8/25/89
+CG2R61 NG2S1   305.00     1.4140 ! RETINOL PACP
+CG2R61 OG311   334.30     1.4110 ! PROT MeOH, EMB 10/10/89,
+CG331  HGA3    322.00     1.1110 ! PROT alkane update, adm jr., 3/2/92
+NG2S1  HGP1    440.00     0.9970 ! PROT Alanine Dipeptide ab initio calc's (LK)
+OG311  HGP1    545.00     0.9600 ! PROT EMB 11/21/89 methanol vib fit; og tested on MeOH EtOH,...
+
+===== ANGLES =====
+CG2O1  CG331  HGA3     33.00    109.50   30.00   2.16300 ! PROT alanine dipeptide, 5/09/91
+CG2O1  NG2S1  HGP1     34.00    123.00 ! PROT NMA Vib Modes (LK)
+CG2R61 CG2R61 CG2R61   40.00    120.00   35.00   2.41620 ! PROT JES 8/25/89
+CG2R61 CG2R61 HGR61    30.00    120.00   22.00   2.15250 ! PROT JES 8/25/89 benzene
+CG2R61 CG2R61 NG2S1    40.00    120.00   35.00   2.4162 ! RESI PACP, FRET AND OTHERS
+CG2R61 CG2R61 OG311    45.20    120.00 ! PYRIDINE phenol, yin
+CG2O1  NG2S1  CG2R61   50.00    120.00 ! RESI PACP, FRET AND OTHERS
+CG2R61 NG2S1  HGP1     34.00    117.00 ! RESI PACP, FRET AND OTHERS
+CG2R61 OG311  HGP1     65.00    108.00 ! PROT JES 8/25/89 phenol
+CG331  CG2O1  NG2S1    80.00    116.50 ! PROT NMA Vib Modes (LK)
+CG331  CG2O1  OG2D1    80.00    121.00 ! PROT Alanine Dipeptide ab initio calc's (LK)
+HGA3   CG331  HGA3     35.50    108.40    5.40   1.80200 ! PROT alkane update, adm jr., 3/2/92
+NG2S1  CG2O1  OG2D1    80.00    122.50 ! PROT NMA Vib Modes (LK)
+
+===== DIHEDRALS =====
+CG2R61 CG2R61 CG2R61 CG2R61     3.1000  2   180.00 ! PROT JES 8/25/89
+CG2R61 CG2R61 CG2R61 HGR61      4.2000  2   180.00 ! PROT JES 8/25/89 benzene
+CG2R61 CG2R61 CG2R61 NG2S1      3.1000  2   180.00 ! RETINOL PACP
+CG2R61 CG2R61 NG2S1  CG2O1      1.2000  2   180.00 ! RETINOL PACP
+CG2R61 CG2R61 NG2S1  HGP1       0.5000  2   180.00 ! RETINOL PACP
+CG2R61 CG2R61 OG311  HGP1       0.9900  2   180.00 ! PROT phenol OH rot bar, 3.37 kcal/mole, adm jr. 3/7/92
+CG331  CG2O1  NG2S1  CG2R61     1.6000  1     0.00 ! RETINOL PACP 1-fold added by kevo
+CG331  CG2O1  NG2S1  CG2R61     2.5000  2   180.00 ! RETINOL PACP
+OG2D1  CG2O1  NG2S1  CG2R61     2.5000  2   180.00 ! RETINOL PACP
+CG331  CG2O1  NG2S1  HGP1       2.5000  2   180.00 ! PROT Gives appropriate NMA cis/trans barrier. (LK)
+OG2D1  CG2O1  NG2S1  HGP1       2.5000  2   180.00 ! PROT Gives appropriate NMA cis/trans barrier. (LK)
+CG2R61 CG2R61 CG2R61 HGR61      4.2000  2   180.00 ! PROT JES 8/25/89 benzene
+HGR61  CG2R61 CG2R61 HGR61      2.4000  2   180.00 ! PROT JES 8/25/89 benzene
+NG2S1  CG2R61 CG2R61 HGR61      2.4000  2   180.00 ! RETINOL PACP Kenno: 4.2 -> 2.4
+NG2S1  CG2O1  CG331  HGA3       0.00  3     0.00 ! PROT, sp2-methyl, no torsion potential
+CG2R61 CG2R61 CG2R61 NG2S1      3.1000  2   180.00 ! RETINOL PACP
+NG2S1  CG2R61 CG2R61 HGR61      2.4000  2   180.00 ! RETINOL PACP Kenno: 4.2 -> 2.4
+OG2D1  CG2O1  CG331  HGA3       0.00  3   180.00 ! PROT adm jr., 8/13/90  geometry and vibrations
+CG2R61 CG2R61 CG2R61 OG311      3.1000  2   180.00 ! PYRIDINE phenol, yin
+OG311  CG2R61 CG2R61 HGR61      2.4000  2   180.00 ! PROT JES 8/25/89 phenol Kenno: 4.2 -> 2.4
+
+===== IMPROPER =====
+CG2O1  CG331  NG2S1  OG2D1    120.00  0     0.00 ! PROT NMA Vibrational Modes (LK) WILDCARD
