@@ -1,0 +1,61 @@
+# MD Simulation with LAMMPS Package
+# Initialization
+dimension      3
+boundary       p p p
+units          real
+atom_style     full
+
+# Atom Definition
+read_data      data.data  
+
+# MD Simulation Settings
+bond_style     harmonic 
+bond_coeff     1 350 1.530 #CC
+bond_coeff     2 350 1.090 #CH
+bond_coeff     3 350 1.420 #CO
+bond_coeff     4 350 0.980 #HO
+angle_style    harmonic
+angle_coeff    1 50 109.471 #C
+angle_coeff    2 50 109.471 #C
+angle_coeff    3 50 109.471 #C
+angle_coeff    4 50 104.510 #O
+angle_coeff    5 50 104.510 #O 
+angle_coeff    6 50 109.471 #C
+angle_coeff    7 50 109.471 #C
+angle_coeff    8 50 109.471 #C
+dihedral_style harmonic
+dihedral_coeff 1 1 -1 3 #CC
+dihedral_coeff 2 1 -1 3 #CC
+dihedral_coeff 3 1 -1 3 #CC
+dihedral_coeff 4 1 -1 3 #CO
+dihedral_coeff 5 1 -1 3 #CO
+dihedral_coeff 6 1 -1 3 #CC
+dihedral_coeff 7 1 -1 3 #CC
+dihedral_coeff 8 1 -1 3 #CO
+dihedral_coeff 9 1 -1 3 #CO
+dihedral_coeff 10 1 -1 3 #CC
+dihedral_coeff 11 1 -1 3 #CO
+dihedral_coeff 12 1 -1 3 #CO
+pair_style     lj/cut/coul/cut 12.0 10.0
+pair_coeff     1 1 0.095 3.458 #C
+pair_coeff     2 2 0.010 2.852 #H
+pair_coeff     3 3 0.215 3.128 #O
+thermo_modify  lost ignore
+thermo_modify  lost/bond ignore
+min_style      cg
+minimize       0.01 0.01 10000 10000
+reset_timestep 0
+timestep       1
+velocity       all create 300 6612656
+fix            1 all nvt temp 300 300 1  
+thermo         100
+compute        RG all gyration
+thermo_style   custom step temp ke pe etotal enthalpy c_RG
+dump           1 all xyz 100 DUMP.xyz
+dump_modify    1 element C H O
+dump	       2 all movie 50 movie.mpg type type zoom 1 size 1280 720 box yes 0.01
+
+# Run a Simulation
+thermo_modify  lost ignore
+thermo_modify  lost/bond ignore
+run            10000
