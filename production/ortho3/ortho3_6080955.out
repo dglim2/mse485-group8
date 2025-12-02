@@ -1,0 +1,3 @@
+Running on nodes: ccc[0391-0392]
+NTASKS = 256, NODES = 2
+/u/dglim2/micromamba/bin/lmp_mpi

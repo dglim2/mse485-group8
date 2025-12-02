@@ -1,0 +1,165 @@
+# --------------------------------------------------------------------
+# LAMMPS Input Script – Acetaminophen Form II + TIP3P-CHARMM Water
+# --------------------------------------------------------------------
+
+# --------------------------------------------------------------------
+# SECTION 1 — BASIC SIMULATION SETTINGS
+# --------------------------------------------------------------------
+
+units           real
+atom_style      full
+boundary        p p p
+special_bonds   charmm
+
+# --------------------------------------------------------------------
+# SECTION 2 — FORCE FIELD (ENERGY MODEL)
+# --------------------------------------------------------------------
+
+pair_style      lj/charmm/coul/long 10.0 12.0
+pair_modify     mix arithmetic
+bond_style      harmonic
+angle_style     charmm
+dihedral_style  charmm
+improper_style  harmonic
+
+# --------------------------------------------------------------------
+# SECTION 3 — INPUT STRUCTURE AND PARAMETERS
+# --------------------------------------------------------------------
+
+read_data       ortho3_pad.data extra/atom/types 2 extra/bond/types 1 extra/angle/types 1
+
+include         acetaminophen.params
+
+kspace_style    pppm 1.0e-5
+
+# --------------------------------------------------------------------
+# SECTION 4 — DEFINE ORIGINAL CRYSTAL CELL GEOMETRY (INNER BOX)
+# --------------------------------------------------------------------
+
+variable        inner_xlo equal 0.0
+variable        inner_xhi equal 35.47110000     # original xhi
+variable        inner_ylo equal 0.0
+variable        inner_yhi equal 29.58840000     # original yhi
+variable        inner_zlo equal 0.0
+variable        inner_zhi equal 34.30520000     # original zhi
+
+# Crystal volume (Å^3) from ORIGINAL inner box
+variable        Vcryst0 equal (v_inner_xhi-v_inner_xlo)*(v_inner_yhi-v_inner_ylo)*(v_inner_zhi-v_inner_zlo)
+
+# Current (big) simulation box volume
+variable        Vbox0 equal vol
+
+# --------------------------------------------------------------------
+# SECTION 5 — TIP3P-CHARMM WATER TYPES AND PARAMETERS
+# --------------------------------------------------------------------
+
+mass            10 15.9994      # TIP3P O
+mass            11 1.0080       # TIP3P H
+
+pair_coeff      10 10  0.1521  3.1507
+pair_coeff      11 11  0.0460  0.4
+
+bond_coeff      11  450.0   0.9572
+angle_coeff     14  55.0  104.52  0.0  0.0
+
+# Water density & constants
+variable        rho_target equal 1.0
+variable        Mw         equal 18.01528
+variable        NA         equal 6.02214076e23
+
+# --------------------------------------------------------------------
+# SECTION 6 — NEIGHBOR LIST
+# --------------------------------------------------------------------
+
+neighbor        2.0 bin
+neigh_modify    every 10 delay 0 check yes
+
+# --------------------------------------------------------------------
+# SECTION 7 — MONITORING AND OUTPUT (for log, including minimize)
+# --------------------------------------------------------------------
+
+thermo          2500
+thermo_style    custom step temp press pe etotal vol density lx ly lz
+thermo_modify   flush yes
+
+# --------------------------------------------------------------------
+# SECTION 8 — REMOVE NET MOMENTUM
+# --------------------------------------------------------------------
+
+fix             mom all momentum 1000 linear 1 1 1 angular
+
+# --------------------------------------------------------------------
+# SECTION 9 — COMPUTE WATER VOLUME AND NUMBER OF WATER MOLECULES
+# --------------------------------------------------------------------
+
+variable        Vwater      equal ${Vbox0}-${Vcryst0}
+variable        nwater_real equal ${rho_target}*${NA}*${Vwater}/(${Mw}*1.0e24)
+variable        nwater      equal floor(v_nwater_real+0.5)
+
+print "Original crystal volume (A^3): ${Vcryst0}"
+print "Current box volume (A^3):      ${Vbox0}"
+print "Water region volume (A^3):     ${Vwater}"
+print "Target water molecules:        ${nwater}"
+
+# --------------------------------------------------------------------
+# SECTION 10 — DEFINE REGIONS AND INSERT WATER
+# --------------------------------------------------------------------
+
+group           crystal type 1 2 3 4 5 6 7 8 9
+
+region          outer block INF INF INF INF INF INF units box
+
+region          inner_in block ${inner_xlo} ${inner_xhi} ${inner_ylo} ${inner_yhi} ${inner_zlo} ${inner_zhi} units box side in
+
+region          inner_out block ${inner_xlo} ${inner_xhi} ${inner_ylo} ${inner_yhi} ${inner_zlo} ${inner_zhi} units box side out
+
+region          solvent intersect 2 outer inner_out
+
+molecule        tip3p tip3p.mol
+
+create_atoms    0 random ${nwater} 123456 solvent mol tip3p 123456 overlap 1.5
+
+# --------------------------------------------------------------------
+# SECTION 11 — ENERGY MINIMIZATION (NO TRAJ)
+# --------------------------------------------------------------------
+
+min_style       cg
+minimize        1.0e-6 1.0e-8 5000 50000
+
+# Reset MD timestep counter so production starts at step 0
+reset_timestep  0
+
+# --------------------------------------------------------------------
+# SECTION 12 — SHAKE CONSTRAINTS, TRAJ, AND SINGLE NPT RUN
+# --------------------------------------------------------------------
+
+dump 1 all atom 2500 ortho3.lammpstrj
+dump_modify 1 sort id
+
+group water type 10 11
+fix shake water shake 0.0001 20 0 b 11 a 14
+
+timestep        2.0
+
+velocity        all create 310.0 123456 mom yes rot yes dist gaussian
+
+fix             npt_all all npt temp 310.0 310.0 100.0 iso 1.0 1.0 1000.0
+
+thermo          2500
+thermo_style    custom step temp press pe etotal vol density lx ly lz
+
+run             2500000
+
+unfix           npt_all
+
+# --------------------------------------------------------------------
+# SECTION 13 — SAVE FINAL STATE
+# --------------------------------------------------------------------
+
+write_data      ortho3.data
+write_restart   ortho3.restart
+
+print "All done! Using pre-padded box from data file; water count based on difference between big box and original crystal cell."
+# --------------------------------------------------------------------
+# END OF INPUT SCRIPT
+# --------------------------------------------------------------------
