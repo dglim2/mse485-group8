@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# run_ortho3.sh – LAMMPS ortho3 production run on 1x 128-core node
+# run_ortho3.sh – LAMMPS ortho3 production run on 2x 128-core node
 #
 
 #SBATCH --job-name=ortho3
