@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Large MD outputs (never commit these)
+*.lammpstrj
+*.dump
+*.dcd
+*.xtc
+*.trr
+*.xyz
+*.npy
+*.log.old
+*.data.old
+
+# Optional: big movies
+*.mpg
+*.mp4
