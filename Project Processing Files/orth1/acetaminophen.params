@@ -1,0 +1,227 @@
+# ----------------------------------------------------------------------
+# Coefficients for Acetaminophen (CGenFF/CHARMM in LAMMPS)
+# This file maps CHARMM/CGenFF parameters to the numeric type IDs
+# that exist in *your* .data file.
+#
+# You only need to fill in the small "FILL THESE IN" block below
+# using the ID->type tables printed at the top of your .data file.
+# ----------------------------------------------------------------------
+
+# ============================
+# 0) FILL THESE IN (IDs only)
+# ============================
+
+# --- Atom type IDs (self LJ parameters applied to id,id) ---
+# Set each variable to the numeric atom-type ID that your .data
+# header shows for the given CGenFF atom type.
+# Example: if the .data header says " 1 : CG2O1", put: variable AT_CG2O1 equal 1
+
+# ---------- Atom type IDs ----------
+variable AT_CG2O1   equal 1
+variable AT_CG2R61  equal 2
+variable AT_CG331   equal 3
+variable AT_HGA3    equal 4
+variable AT_HGP1    equal 5
+variable AT_HGR61   equal 6
+variable AT_NG2S1   equal 7
+variable AT_OG2D1   equal 8
+variable AT_OG311   equal 9
+
+# ---------- Bond type IDs ----------
+variable BT_CG2O1_CG331   equal 1
+variable BT_CG2O1_NG2S1   equal 2
+variable BT_CG2O1_OG2D1   equal 3
+variable BT_CG2R61_CG2R61 equal 4
+variable BT_CG2R61_HGR61  equal 5
+variable BT_CG2R61_NG2S1  equal 6
+variable BT_CG2R61_OG311  equal 7
+variable BT_CG331_HGA3    equal 8
+variable BT_NG2S1_HGP1    equal 9
+variable BT_OG311_HGP1    equal 10
+
+# ---------- Angle type IDs ----------
+# (ends can be swapped; the central atom stays in the middle)
+variable ATY_CG2O1_CG331_HGA3        equal 1
+variable ATY_CG2R61_CG2R61_CG2R61    equal 2
+variable ATY_CG2R61_CG2R61_HGR61     equal 3
+variable ATY_CG2R61_CG2R61_NG2S1     equal 4
+variable ATY_CG2R61_CG2R61_OG311     equal 5
+variable ATY_CG2O1_NG2S1_CG2R61      equal 6
+variable ATY_CG2R61_NG2S1_HGP1       equal 7
+variable ATY_CG2R61_OG311_HGP1       equal 8
+variable ATY_HGA3_CG331_HGA3         equal 9
+variable ATY_CG2O1_NG2S1_HGP1        equal 10
+variable ATY_CG331_CG2O1_NG2S1       equal 11
+variable ATY_NG2S1_CG2O1_OG2D1       equal 12
+variable ATY_CG331_CG2O1_OG2D1       equal 13
+
+# ---------- Dihedral type IDs ----------
+# (reversal of the 4 atoms is equivalent; mapping numbers come from your header)
+variable DTY_CG2R61_CG2R61_CG2R61_CG2R61  equal 1
+variable DTY_CG2R61_CG2R61_CG2R61_HGR61   equal 2
+variable DTY_CG2R61_CG2R61_CG2R61_NG2S1   equal 3
+variable DTY_CG2R61_CG2R61_NG2S1_CG2O1    equal 4
+variable DTY_CG2R61_CG2R61_NG2S1_HGP1     equal 5
+variable DTY_CG331_CG2O1_NG2S1_CG2R61     equal 6
+variable DTY_OG2D1_CG2O1_NG2S1_CG2R61     equal 7
+variable DTY_CG331_CG2O1_NG2S1_HGP1       equal 8
+variable DTY_OG2D1_CG2O1_NG2S1_HGP1       equal 9
+variable DTY_CG2R61_CG2R61_OG311_HGP1     equal 10
+variable DTY_HGR61_CG2R61_CG2R61_CG2R61   equal 11
+variable DTY_HGR61_CG2R61_CG2R61_NG2S1    equal 13
+variable DTY_NG2S1_CG2R61_CG2R61_CG2R61   equal 15
+variable DTY_HGR61_CG2R61_CG2R61_HGR61    equal 12
+variable DTY_NG2S1_CG2R61_CG2R61_HGR61    equal 16
+variable DTY_NG2S1_CG2O1_CG331_HGA3       equal 14
+variable DTY_OG2D1_CG2O1_CG331_HGA3       equal 17
+variable DTY_CG2R61_CG2R61_CG2R61_OG311   equal 18
+variable DTY_OG311_CG2R61_CG2R61_HGR61    equal 19
+
+# ---------- Improper type IDs ----------
+variable ITY_CG2O1_CG331_NG2S1_OG2D1  equal 1
+
+
+# =================================================
+# 1) PAIR (NONBONDED) — lj/charmm/coul/long params
+#    We provide (epsilon, sigma).  sigma = (2*Rmin/2) / 2^(1/6)
+#    Values below are computed from your NONBONDED lines.
+# =================================================
+
+# CG2O1: eps=0.1100, Rmin/2=2.0000  -> sigma ≈ 3.5657
+pair_coeff ${AT_CG2O1}  ${AT_CG2O1}   0.1100   3.5657   # CG2O1
+
+# CG2R61: eps=0.0700, Rmin/2=1.9924 -> sigma ≈ 3.5500
+pair_coeff ${AT_CG2R61} ${AT_CG2R61}  0.0700   3.5500   # CG2R61
+
+# CG331: eps=0.0780, Rmin/2=2.0500  -> sigma ≈ 3.6529
+pair_coeff ${AT_CG331}  ${AT_CG331}   0.0780   3.6529   # CG331
+
+# HGA3: eps=0.0240, Rmin/2=1.3400   -> sigma ≈ 2.3870
+pair_coeff ${AT_HGA3}   ${AT_HGA3}    0.0240   2.3870   # HGA3 (methyl H)
+
+# HGP1: eps=0.0460, Rmin/2=0.2245   -> sigma ≈ 0.4002
+pair_coeff ${AT_HGP1}   ${AT_HGP1}    0.0460   0.4002   # HGP1 (polar H)
+
+# HGR61: eps=0.0300, Rmin/2=1.3582  -> sigma ≈ 2.4200
+pair_coeff ${AT_HGR61}  ${AT_HGR61}   0.0300   2.4200   # HGR61 (aryl H)
+
+# NG2S1: eps=0.2000, Rmin/2=1.8500  -> sigma ≈ 3.2950
+pair_coeff ${AT_NG2S1}  ${AT_NG2S1}   0.2000   3.2950   # NG2S1 (amide N)
+
+# OG2D1: eps=0.1200, Rmin/2=1.7000  -> sigma ≈ 3.0280
+pair_coeff ${AT_OG2D1}  ${AT_OG2D1}   0.1200   3.0280   # OG2D1 (carbonyl O)
+
+# OG311: eps=0.1921, Rmin/2=1.7650  -> sigma ≈ 3.1470
+pair_coeff ${AT_OG311}  ${AT_OG311}   0.1921   3.1470   # OG311 (phenolic O)
+
+
+# ==========================================
+# 2) BONDS — bond_style charmm (K  r0)
+# ==========================================
+bond_coeff ${BT_CG2O1_CG331}     250.00   1.4900   # CG2O1 - CG331
+bond_coeff ${BT_CG2O1_NG2S1}     370.00   1.3450   # CG2O1 - NG2S1
+bond_coeff ${BT_CG2O1_OG2D1}     620.00   1.2300   # CG2O1 - OG2D1
+bond_coeff ${BT_CG2R61_CG2R61}   305.00   1.3750   # CG2R61 - CG2R61
+bond_coeff ${BT_CG2R61_HGR61}    340.00   1.0800   # CG2R61 - HGR61
+bond_coeff ${BT_CG2R61_NG2S1}    305.00   1.4140   # CG2R61 - NG2S1
+bond_coeff ${BT_CG2R61_OG311}    334.30   1.4110   # CG2R61 - OG311
+bond_coeff ${BT_CG331_HGA3}      322.00   1.1110   # CG331  - HGA3
+bond_coeff ${BT_NG2S1_HGP1}      440.00   0.9970   # NG2S1  - HGP1
+bond_coeff ${BT_OG311_HGP1}      545.00   0.9600   # OG311  - HGP1
+
+
+# ===============================================================
+# 3) ANGLES — angle_style charmm (Ktheta  theta0  Kub  r_ub)
+# (If Kub/r_ub are omitted in PRM, use 0.0 0.0)
+# ===============================================================
+angle_coeff ${ATY_CG2O1_CG331_HGA3}      33.00   109.50   30.00   2.16300
+angle_coeff ${ATY_CG2O1_NG2S1_HGP1}      34.00   123.00    0.00   0.00000
+angle_coeff ${ATY_CG2R61_CG2R61_CG2R61}  40.00   120.00   35.00   2.41620
+angle_coeff ${ATY_CG2R61_CG2R61_HGR61}   30.00   120.00   22.00   2.15250
+angle_coeff ${ATY_CG2R61_CG2R61_NG2S1}   40.00   120.00   35.00   2.41620
+angle_coeff ${ATY_CG2R61_CG2R61_OG311}   45.20   120.00    0.00   0.00000
+angle_coeff ${ATY_CG2O1_NG2S1_CG2R61}    50.00   120.00    0.00   0.00000
+angle_coeff ${ATY_CG2R61_NG2S1_HGP1}     34.00   117.00    0.00   0.00000
+angle_coeff ${ATY_CG2R61_OG311_HGP1}     65.00   108.00    0.00   0.00000
+angle_coeff ${ATY_CG331_CG2O1_NG2S1}     80.00   116.50    0.00   0.00000
+angle_coeff ${ATY_CG331_CG2O1_OG2D1}     80.00   121.00    0.00   0.00000
+angle_coeff ${ATY_HGA3_CG331_HGA3}       35.50   108.40    5.40   1.80200
+angle_coeff ${ATY_NG2S1_CG2O1_OG2D1}     80.00   122.50    0.00   0.00000
+
+
+# ========================================================================================
+# 4) DIHEDRALS — dihedral_style charmm
+# One line can contain up to 4 Fourier terms: (K1 n1 d1   K2 n2 d2   K3 n3 d3   K4 n4 d4)
+# If a dihedral appears multiple times in PRM (different n), we combine them on one line.
+# ========================================================================================
+
+# 1  CG2R61-CG2R61-CG2R61-CG2R61
+dihedral_coeff ${DTY_CG2R61_CG2R61_CG2R61_CG2R61}   3.1000  2  180  0.5   # 6-ring backbone → 0.5
+
+# 2  CG2R61-CG2R61-CG2R61-HGR61
+dihedral_coeff ${DTY_CG2R61_CG2R61_CG2R61_HGR61}    4.2000  2  180  1.0
+
+# 3  CG2R61-CG2R61-CG2R61-NG2S1
+dihedral_coeff ${DTY_CG2R61_CG2R61_CG2R61_NG2S1}    3.1000  2  180  1.0
+
+# 4  CG2R61-CG2R61-NG2S1-CG2O1
+dihedral_coeff ${DTY_CG2R61_CG2R61_NG2S1_CG2O1}     1.2000  2  180  1.0
+
+# 5  CG2R61-CG2R61-NG2S1-HGP1
+dihedral_coeff ${DTY_CG2R61_CG2R61_NG2S1_HGP1}      0.5000  2  180  1.0
+
+# 6  CG331-CG2O1-NG2S1-CG2R61  (two terms)
+dihedral_coeff ${DTY_CG331_CG2O1_NG2S1_CG2R61}      1.6000  1    0  1.0
+dihedral_coeff ${DTY_CG331_CG2O1_NG2S1_CG2R61}      2.5000  2  180  1.0
+
+# 7  OG2D1-CG2O1-NG2S1-CG2R61
+dihedral_coeff ${DTY_OG2D1_CG2O1_NG2S1_CG2R61}      2.5000  2  180  1.0
+
+# 8  CG331-CG2O1-NG2S1-HGP1
+dihedral_coeff ${DTY_CG331_CG2O1_NG2S1_HGP1}        2.5000  2  180  1.0
+
+# 9  OG2D1-CG2O1-NG2S1-HGP1
+dihedral_coeff ${DTY_OG2D1_CG2O1_NG2S1_HGP1}        2.5000  2  180  1.0
+
+# 10 CG2R61-CG2R61-OG311-HGP1
+dihedral_coeff ${DTY_CG2R61_CG2R61_OG311_HGP1}      0.9900  2  180  1.0
+
+# 11 HGR61-CG2R61-CG2R61-CG2R61  (reverse of type 2)
+dihedral_coeff ${DTY_HGR61_CG2R61_CG2R61_CG2R61}    4.2000  2  180  1.0
+
+# 12 HGR61-CG2R61-CG2R61-HGR61
+dihedral_coeff ${DTY_HGR61_CG2R61_CG2R61_HGR61}     2.4000  2  180  1.0
+
+# 13 HGR61-CG2R61-CG2R61-NG2S1  (reverse of type 16)
+dihedral_coeff ${DTY_HGR61_CG2R61_CG2R61_NG2S1}     2.4000  2  180  1.0
+
+# 14 NG2S1-CG2O1-CG331-HGA3    (“no torsion potential”)
+dihedral_coeff ${DTY_NG2S1_CG2O1_CG331_HGA3}        0.0000  3    0  1.0
+
+# 15 NG2S1-CG2R61-CG2R61-CG2R61 (reverse of type 3)
+dihedral_coeff ${DTY_NG2S1_CG2R61_CG2R61_CG2R61}    3.1000  2  180  1.0
+
+# 16 NG2S1-CG2R61-CG2R61-HGR61
+dihedral_coeff ${DTY_NG2S1_CG2R61_CG2R61_HGR61}     2.4000  2  180  1.0
+
+# 17 OG2D1-CG2O1-CG331-HGA3    (“no torsion potential”, 180° phase)
+dihedral_coeff ${DTY_OG2D1_CG2O1_CG331_HGA3}        0.0000  3  180  1.0
+
+# 18 CG2R61-CG2R61-CG2R61-OG311
+dihedral_coeff ${DTY_CG2R61_CG2R61_CG2R61_OG311}    3.1000  2  180  1.0
+
+# 19 OG311-CG2R61-CG2R61-HGR61
+dihedral_coeff ${DTY_OG311_CG2R61_CG2R61_HGR61}     2.4000  2  180  1.0
+
+
+# ===============================================
+# 5) IMPROPERS — improper_style harmonic (K  chi0)
+# Planarity around the amide (sp2) is enforced here.
+# ===============================================
+# PRM entry: "CG2O1  CG331  NG2S1  OG2D1    120.00  0     0.00"
+# For LAMMPS harmonic: use K=120.00, chi0=0.00 degrees.
+improper_coeff ${ITY_CG2O1_CG331_NG2S1_OG2D1}   120.00   0.00
+
+# ----------------------------------------------------------------------
+# END
+# ----------------------------------------------------------------------
